@@ -164,8 +164,16 @@ class selenext:
         icon_path = ':/plugins/selenext/icon.png'
         self.add_action(
             icon_path,
-            text=self.tr(u'selenext'),
+            text=self.tr(u'selectNext'),
             callback=self.run,
+            parent=self.iface.mainWindow())
+
+
+        icon_path = ':/plugins/selenext/iconprevious.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'selectPrevious'),
+            callback=self.runPrevious,
             parent=self.iface.mainWindow())
 
 
@@ -182,6 +190,10 @@ class selenext:
 
         canvas = self.iface.mapCanvas()
         vlayer = canvas.currentLayer()
+
+        if (vlayer == NULL):
+           return        
+        
         count = vlayer.selectedFeatureCount()
         #print "----" + str(count)
 
@@ -198,7 +210,39 @@ class selenext:
             iii = iii+1
             selectedList[iii] = f+1
 
-        vlayer.removeSelection()
+#        vlayer.removeSelection()
+        vlayer.setSelectedFeatures(selectedList)
+    
+        box = vlayer.boundingBoxOfSelected()
+        self.iface.mapCanvas().setExtent(box)
+        self.iface.mapCanvas().refresh()
+
+
+    def runPrevious(self):
+
+        canvas = self.iface.mapCanvas()
+        vlayer = canvas.currentLayer()
+        
+        if (vlayer == NULL):
+           return  
+        
+        count = vlayer.selectedFeatureCount()
+        #print "----" + str(count)
+
+        if (count == 0):
+           return
+
+        features = vlayer.selectedFeatures()
+
+        selectedList = vlayer.selectedFeaturesIds()
+
+        iii = -1
+        for f in selectedList:
+         #   print f
+            iii = iii+1
+            selectedList[iii] = f-1
+
+#        vlayer.removeSelection()
         vlayer.setSelectedFeatures(selectedList)
     
         box = vlayer.boundingBoxOfSelected()
