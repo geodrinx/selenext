@@ -1,1 +1,0 @@
-selenext.py All necessary methods one can find in QgisInterface class [1],\njust search for "addPlugin*" and "removePlugin*". There are:\n - addPluginToMenu\n - addPluginToDatabaseMenu\n - addPluginToRasterMenu\n - addPluginToVectorMenu\n - addPluginToWebMenu\nand corresponding remove* methods. Same with adding/removing\ntoolbar buttons.\nÂ
