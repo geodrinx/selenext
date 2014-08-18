@@ -150,7 +150,7 @@ class selenext:
             self.toolbar.addAction(action)
 
         if add_to_menu:
-            self.iface.addPluginToMenu(
+            self.iface.addPluginToVectorMenu(
                 self.menu,
                 action)
 
@@ -176,11 +176,18 @@ class selenext:
             callback=self.runPrevious,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/selenext/iconselected.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'showSelected'),
+            callback=self.runSelected,
+            parent=self.iface.mainWindow())            
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginMenu(
+            self.iface.removePluginVectorMenu(
                 self.tr(u'&selenext'),
                 action)
             self.iface.removeToolBarIcon(action)
@@ -217,6 +224,8 @@ class selenext:
         self.iface.mapCanvas().setExtent(box)
         self.iface.mapCanvas().refresh()
 
+#        features = vlayer.selectedFeatures()
+#        self.iface.openFeatureForm(self.iface.activeLayer(), features[count-1], False)
 
     def runPrevious(self):
 
@@ -248,3 +257,38 @@ class selenext:
         box = vlayer.boundingBoxOfSelected()
         self.iface.mapCanvas().setExtent(box)
         self.iface.mapCanvas().refresh()
+
+#        features = vlayer.selectedFeatures()
+#        self.iface.openFeatureForm(self.iface.activeLayer(), features[count-1], False)
+
+        
+    def runSelected(self):
+    
+        
+        canvas = self.iface.mapCanvas()
+        vlayer = canvas.currentLayer()
+        
+        if (vlayer == NULL):
+           return  
+        
+        count = vlayer.selectedFeatureCount()
+        #print "----" + str(count)
+
+        if (count == 0):
+#           count = 1        
+#           selectedList[0] = 0
+           return
+
+        features = vlayer.selectedFeatures()
+
+        selectedList = vlayer.selectedFeaturesIds()
+
+
+        vlayer.setSelectedFeatures(selectedList)
+    
+        box = vlayer.boundingBoxOfSelected()
+        self.iface.mapCanvas().setExtent(box)
+        self.iface.mapCanvas().refresh()
+
+        features = vlayer.selectedFeatures()
+        self.iface.openFeatureForm(self.iface.activeLayer(), features[count-1], False)        
